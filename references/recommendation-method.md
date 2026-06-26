@@ -1,0 +1,86 @@
+# Recommendation Method
+
+## Build The Taste Profile
+
+Separate evidence into signal groups:
+
+- Strong positive: liked tracks, repeated scrobbles, saved albums, user-made playlists, loved tracks.
+- Medium positive: followed playlists, followed artists, recent plays, search/play history.
+- Weak positive: tracks in broad imported playlists, algorithmic playlists, one-off listens.
+- Negative or uncertain: removed tracks, explicit dislikes, skipped tracks, stale recommendations ignored by the user.
+
+Analyze across:
+
+- Artist affinity: repeated artists, side projects, collaborators, labels, scenes, regions.
+- Genre and tags: platform genres, Last.fm tags, playlist names, MusicBrainz/Discogs metadata.
+- Sound and production: energy, tempo, danceability, acousticness, electronic texture, vocal style, instrumentation, mood.
+- Era and geography: release decades, regional scenes, languages, local vs international tilt.
+- Discovery posture: mainstream vs niche, deep-cut tolerance, album orientation, singles orientation.
+- Current-session intent: mood/atmosphere, language preference, era/time age, artist/singer focus, listening context, and whether the user wants safe or exploratory recommendations, only when the user already stated it.
+
+Keep long-term taste and current-session intent separate. Long-term taste predicts what the user usually likes; stated current intent tells what they want now. Do not ask for a current brief before recommending. When no current intent is stated, rank for balanced long-term fit. When taste and stated intent diverge, include a small number of intent-matching picks and label the tradeoff clearly.
+
+If there is no usable library evidence, do not invent a taste profile. Build from the user's stated mood, language, era, focus, and discovery posture when provided. If no intent was provided, recommend a broad lower-confidence starter set based on common listener choices.
+
+If usable library evidence exists, provide the taste analysis before the recommendation list. Cover the evidence from multiple aspects: dominant genres/scenes, recurring artists and artist archetypes, mood and sound profile, tempo/energy, language/region distribution, era distribution, mainstream vs niche posture, and how any user-stated intent changes candidate ranking.
+
+## Candidate Generation
+
+Use several sources so recommendations are not one-note:
+
+1. Neighbor artists and tracks from platform recommendation/search tools.
+2. Similar tags and microgenres from Last.fm, ListenBrainz, MusicBrainz, Discogs metadata, ordinary web research, or already-authorized music connectors.
+3. Collaborators, producers, labels, remixers, and scene-adjacent artists.
+4. Deep cuts from artists the user likes but has not saved.
+5. Newer releases matching established taste axes.
+6. Cross-era analogs: older roots of current favorites or newer artists carrying older traits.
+
+## Ranking
+
+Score candidates with a simple transparent rubric:
+
+- Fit: overlaps with multiple strong taste axes.
+- Intent match: satisfies the user's stated current mood, language, era/time age, singer focus, or listening context when provided.
+- Novelty: not in library, not previously recommended, not too obvious.
+- Diversity: avoids returning the same artist, genre, decade, or mood repeatedly.
+- Confidence: backed by strong user evidence or multiple independent signals.
+- Explainability: can be justified in one sentence without hand-waving.
+
+Default list composition:
+
+- 45 percent close fits from long-term taste
+- 30 percent adjacent discoveries
+- 15 percent deep cuts or exploratory picks
+- 10 percent fresh/publicly researched picks matching established taste axes
+
+Adjust only when the user already asks for adventurous, mainstream, obscure, new releases, specific moods, workout music, study music, or another listening context.
+
+For empty-library runs, use this composition instead:
+
+- 60 percent direct intent matches
+- 25 percent common listener choices for the requested genre/language/era/mood, such as widely liked tracks, canon artists, popular playlist staples, or critically recognized entry points
+- 15 percent exploratory picks
+
+## Output Rules
+
+Always dedupe against:
+
+1. Current library snapshot
+2. Previous recommendation ledger
+3. Current response list
+
+For each recommendation include:
+
+- Artist
+- Track/album/playlist name
+- Type
+- Why it fits
+- Which signals it uses: long-term taste if available, current mood, language/region, era/time age, artist focus, discovery posture
+- If no current intent was provided, say recommendations are ranked for balanced taste-profile fit; do not ask follow-up preference questions before listing them.
+- Link if available, otherwise a search phrase
+
+If the user requested playlist creation, create the playlist only after the final deduped recommendation list is known and only through an installed desktop app with reliable controls. The final response should still include the recommendation rationale, plus playlist creation status: created, unavailable, or partially completed with skipped items.
+
+Mention changes since the last analysis when the cache fingerprint changed.
+
+For non-empty-library runs, the final answer should make the taste model visible before the list; do not only output songs. For empty-library runs, explicitly say that the list is based on common preferences rather than personal listening history.
