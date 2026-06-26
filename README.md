@@ -10,7 +10,8 @@ The skill can inspect authorized installed music clients such as Spotify Desktop
 - Stays desktop-first: it avoids Chrome, browser automation, web players, and web music apps for private account access.
 - Does not ask for API keys, cookies, OAuth tokens, or exported files up front.
 - Works beyond Spotify: the workflow is platform-neutral and can adapt to Apple Music, Amazon Music, TIDAL, Deezer, SoundCloud, and other installed clients.
-- Recommends directly: it does not interview you for mood or genre preferences before producing a list.
+- Recommends directly: it does not interview you for mood, genre, or list-size preferences before producing a list.
+- Respects requested list sizes: ask for 5, 12, 30, or another count when you want a specific number of songs.
 - Avoids repeats: it excludes liked songs, saved/library tracks, visible playlist contents, and previous recommendations.
 - Can create a playlist only when explicitly requested and when the desktop app exposes reliable controls.
 
@@ -41,6 +42,11 @@ Use my installed music app and make a playlist of recommendations if playlist cr
 ```text
 $music-suggester
 Give me Japanese R&B and city-pop-adjacent recommendations based on my taste.
+```
+
+```text
+$music-suggester
+Recommend 15 older J-pop songs from the 90s and 00s that are not already in my library.
 ```
 
 ```text

@@ -16,9 +16,9 @@ Analyze across:
 - Sound and production: energy, tempo, danceability, acousticness, electronic texture, vocal style, instrumentation, mood.
 - Era and geography: release decades, regional scenes, languages, local vs international tilt.
 - Discovery posture: mainstream vs niche, deep-cut tolerance, album orientation, singles orientation.
-- Current-session intent: mood/atmosphere, language preference, era/time age, artist/singer focus, listening context, and whether the user wants safe or exploratory recommendations, only when the user already stated it.
+- Current-session intent: mood/atmosphere, language preference, era/time age, artist/singer focus, listening context, desired recommendation count, and whether the user wants safe or exploratory recommendations, only when the user already stated it.
 
-Keep long-term taste and current-session intent separate. Long-term taste predicts what the user usually likes; stated current intent tells what they want now. Do not ask for a current brief before recommending. When no current intent is stated, rank for balanced long-term fit. When taste and stated intent diverge, include a small number of intent-matching picks and label the tradeoff clearly.
+Keep long-term taste and current-session intent separate. Long-term taste predicts what the user usually likes; stated current intent tells what they want now, including how many songs they requested. Do not ask for a current brief before recommending. When no current intent is stated, rank for balanced long-term fit and use the default recommendation count. When taste and stated intent diverge, include a small number of intent-matching picks and label the tradeoff clearly.
 
 If there is no usable library evidence, do not invent a taste profile. Build from the user's stated mood, language, era, focus, and discovery posture when provided. If no intent was provided, recommend a broad lower-confidence starter set based on common listener choices.
 
@@ -40,7 +40,7 @@ Use several sources so recommendations are not one-note:
 Score candidates with a simple transparent rubric:
 
 - Fit: overlaps with multiple strong taste axes.
-- Intent match: satisfies the user's stated current mood, language, era/time age, singer focus, or listening context when provided.
+- Intent match: satisfies the user's stated current mood, language, era/time age, singer focus, listening context, or requested recommendation count when provided.
 - Novelty: not in library, not previously recommended, not too obvious.
 - Diversity: avoids returning the same artist, genre, decade, or mood repeatedly.
 - Confidence: backed by strong user evidence or multiple independent signals.
@@ -54,6 +54,8 @@ Default list composition:
 - 10 percent fresh/publicly researched picks matching established taste axes
 
 Adjust only when the user already asks for adventurous, mainstream, obscure, new releases, specific moods, workout music, study music, or another listening context.
+
+Use the user's requested song count as the target final list size when provided. Otherwise default to 10-20 recommendations. If the requested count is too large for the available evidence or playlist-add workflow, provide a clearly labeled first batch and state the cap or reason.
 
 For empty-library runs, use this composition instead:
 
@@ -84,6 +86,7 @@ Immediately after `Taste analysis` and before the recommendation sections, inclu
 - Which music type or genre should the next list emphasize or avoid?
 - Which era or time age should it target?
 - Which country, region, or language should it focus on?
+- How many songs should the next recommendation list include?
 - Is there a mood, use case, or energy level for the next list?
 - Should it focus on, resemble, or avoid any specific musician?
 - Should the next list be safer, more obscure, newer, older, or more exploratory?
