@@ -7,7 +7,7 @@ description: Access installed desktop music apps such as Spotify, Apple Music/Mu
 
 ## Overview
 
-Build recommendations from evidence, not vibes alone. Enter the user's authorized installed music app or connected music account, collect music-library data, derive a durable taste profile, compare it with any previous profile, then recommend items that are novel, explainable, and deduplicated. Do not stop to ask preference-brief questions before recommending; use any intention, mood, language, era, artist, or discovery constraints the user already provided, otherwise infer a balanced recommendation set from the taste profile. When the user requested playlist creation and the selected desktop app exposes reliable playlist creation controls, create a recommendation playlist through computer-use after finalizing the deduped recommendations; add tracks only when add-to-playlist controls are reliable, otherwise leave the recommendation list/status for the user to play manually. Keep the workflow platform-neutral: Spotify, Apple Music, Amazon Music, YouTube Music desktop apps, TIDAL, Deezer, SoundCloud, and other downloaded music clients are valid sources when installed and authorized.
+Build recommendations from evidence, not vibes alone. Enter the user's authorized installed music app or connected music account, collect music-library data, derive a durable taste profile, compare it with any previous profile, then recommend items that are novel, explainable, and deduplicated. Do not stop to ask preference-brief questions before recommending; use any intention, mood, language, era, artist, or discovery constraints the user already provided, otherwise infer a balanced recommendation set from the taste profile. After the taste analysis, include a short non-blocking set of questions the user can answer to refine the next list, such as music type, era/time age, country or language, and specific musicians; then continue directly into recommendations without waiting for answers. After recommendations, check whether the chosen desktop app appears to support playlist creation and adding tracks, report that availability, and leave the recommended list visible for the user to review. Create a playlist or add recommendations only after the user explicitly agrees in a follow-up; do not add tracks during the initial recommendation response. Keep the workflow platform-neutral: Spotify, Apple Music, Amazon Music, YouTube Music desktop apps, TIDAL, Deezer, SoundCloud, and other downloaded music clients are valid sources when installed and authorized.
 
 Default to automatic installed-app access. Use desktop app control through computer-use, existing authenticated desktop-app sessions, or already-installed connectors. Do not use Chrome, browser control, web players, or web music apps to access the user's music account, even if they appear available; this skill treats browser automation as unsafe for account/library access. Ordinary web search is allowed for public music research, metadata enrichment, release recency, genre context, and candidate discovery. Do not ask the user to create an API app, paste API keys, provide tokens, or export files up front. Treat API setup and user-provided exports as last-resort fallbacks after desktop-app automation and already-authorized connectors are unavailable, blocked, or explicitly declined.
 
@@ -76,18 +76,28 @@ Default to automatic installed-app access. Use desktop app control through compu
    - For each recommendation, give a short "why this fits" note tied to observed taste axes.
    - Include platform links when tools provide them for the selected app; otherwise include search-ready artist and title strings. Do not force Spotify links when the source app is Apple Music, Amazon Music, or another platform.
 
-8. Create a playlist when requested and available.
-   - Use this step only when the user explicitly requested playlist creation in the current task, or when the user confirms after seeing the recommendation list. Creating or modifying playlists changes the user's music account, so do not do it silently.
+8. Offer optional refinement questions.
+   - Immediately after `Taste analysis`, include a section named `Questions to refine the next list`, then continue to the recommendation sections in the same response.
+   - Do not wait for answers before giving recommendations; these questions are visible steering options for the next list, not a blocking interview for the current one.
+   - Ask concise, optional questions that would materially change the next recommendation round: preferred music type/genre, era or time age, country/region/language, mood/use case, discovery level, and whether to focus on or avoid specific musicians.
+   - Tailor the questions to uncertainty in the taste profile. Avoid generic questionnaires when the user's prior request already answered a point.
+   - If the user answers any refinement questions, treat those answers as current-session intent for the next run, not as permanent taste unless they recur.
+
+9. Check playlist availability and create only after consent.
+   - After the recommendation sections, inspect or infer whether the chosen installed desktop app exposes reliable playlist creation and add-to-playlist controls. Do this as a capability/status check; do not create or modify anything during this check.
+   - Include a `Playlist availability` status in the response: supported, unavailable, ambiguous, subscription/login blocked, or not checked, plus a short reason.
+   - Leave the recommended list in the response for user review so the user can decide which tracks, if any, they want added to a playlist or song list.
+   - Use playlist creation/addition only when the user explicitly requested it after seeing the recommendation list, or when the user confirms after the `Playlist availability` status. Creating or modifying playlists changes the user's music account, so do not do it silently.
    - Use computer-use in the selected installed desktop app. Do not use Chrome, browser control, web players, or web music apps for playlist creation.
-   - First verify that the app exposes reliable playlist creation controls. If creation is missing, ambiguous, subscription-blocked, or too unreliable, do not create the playlist; say playlist creation is not available in the current app state and provide the recommendation list.
+   - First verify that the app exposes reliable playlist creation controls. If creation is missing, ambiguous, subscription-blocked, or too unreliable, do not create the playlist; say playlist creation is not available in the current app state and provide the recommendation list/status for manual review.
    - Treat playlist changes as additive only. Never delete, remove, replace, reorder, rename, overwrite, deduplicate, or clean up any existing playlist content unless the user explicitly asks for that exact destructive action. If a duplicate or wrong item is added by accident, report it clearly and ask before removing it.
    - Prefer a user-provided playlist name. Otherwise use a concise dated name such as `Codex Recommendations YYYY-MM-DD` or a platform-native equivalent.
-   - If add-to-playlist controls are reliable, add only the final deduped recommendation set after checking it against liked songs, saved tracks, owned playlists, saved playlists, and the target playlist contents visible in the app. Search by artist-title, verify the matched track/album when possible, skip uncertain matches rather than adding the wrong item or an existing library item, and report skipped/ambiguous items.
+   - If the user confirms adding recommendations, ask whether to add all recommendations or only selected items when their intent is unclear. If the user says to add all, add only the final deduped recommendation set after checking it against liked songs, saved tracks, owned playlists, saved playlists, and the target playlist contents visible in the app. Search by artist-title, verify the matched track/album when possible, skip uncertain matches rather than adding the wrong item or an existing library item, and report skipped/ambiguous items.
    - If add-to-playlist controls are unavailable, ambiguous, or unstable, stop adding. Leave the playlist as created or leave the recommendation list/status in the response so the user can play or add items manually.
    - Do not play music, follow artists, like songs, remove songs, delete items, rename existing playlists, change privacy settings, or share the playlist unless the user explicitly asks.
    - After creation, report the playlist name, source app, number of items added if any, skipped items, whether adding was stopped or not attempted, and any limits encountered.
 
-9. Save state.
+10. Save state.
    - Save the latest normalized snapshot fingerprint, profile summary, recommendation ledger, and timestamp.
    - Save any user-provided current-session intent with the run summary, but do not treat it as permanent taste unless it recurs across sessions.
    - For empty-library runs, save the source state as `no_usable_library_evidence` and preserve only any user-provided current-session intent plus recommendation ledger.
@@ -104,14 +114,16 @@ Default to 10-20 recommendations unless the user asks for a different size. Use 
 - `Current mood picks`: use only when the user already asked for a specific atmosphere, language, singer, or listening context.
 - `No-library starter set`: use when there is no usable platform history; be explicit that confidence is lower.
 - `Taste analysis`: required when usable library evidence exists; summarize multiple taste axes before listing recommendations.
+- `Playlist availability`: required after recommendation sections; report whether the chosen desktop app appears to support playlist creation and adding recommendations, but do not modify the account unless the user confirms.
 - `Playlist created`: use only when a requested playlist was actually created in the installed app; include app, playlist name, count added if any, skipped items, and whether adding was stopped or left for the user.
 - `Why these`: a brief synthesis of the recommendation logic and what changed since last run.
+- `Questions to refine the next list`: required immediately after `Taste analysis` and before recommendation sections; ask optional follow-up questions about music type/genre, era/time age, country/region/language, mood/use case, discovery level, and specific musicians to focus on or avoid.
 
 When evidence is thin or empty, say so and ask for one additional source only after giving a small starter set.
 
 ## Intent Handling
 
-Do not ask a preference brief before recommending. Extract intent only from the user's request, such as "Japanese R&B", "workout", "new releases", "female vocals", "similar to X", "avoid Y", or "more obscure". If no intent is stated, proceed with balanced recommendations from the taste profile and mention that no extra preference constraints were provided.
+Do not ask a preference brief before recommending. Extract intent only from the user's request, such as "Japanese R&B", "workout", "new releases", "female vocals", "similar to X", "avoid Y", or "more obscure". If no intent is stated, proceed with balanced recommendations from the taste profile and mention that no extra preference constraints were provided. After the taste analysis, list optional refinement questions so the user can steer the next list, then give recommendations in the same response without waiting.
 
 ## Platform Notes
 
