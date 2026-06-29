@@ -1,5 +1,7 @@
 # Music Suggester
 
+![Music Suggester banner](assets/music-suggester-banner.png)
+
 A Codex skill that recommends music from the desktop music apps you already use.
 
 It looks at authorized installed apps such as Spotify Desktop, Apple Music/Music.app, Amazon Music, TIDAL, Deezer, SoundCloud, and other downloaded players, builds a lightweight taste profile, then suggests songs that are explainable and not already in your visible library or playlists.
