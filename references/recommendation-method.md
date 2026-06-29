@@ -81,7 +81,7 @@ For each recommendation include:
 - If no current intent was provided, say recommendations are ranked for balanced taste-profile fit; do not ask follow-up preference questions before listing them.
 - Link if available, otherwise a search phrase
 
-Immediately after `Taste analysis` and before the recommendation sections, include `Questions to refine the next list`. These are optional follow-up questions for the user to answer while still receiving the current recommendations in the same response, not prerequisites for the current run. Cover only questions that would materially change the next batch, such as:
+Immediately after `Taste analysis` and before the recommendation sections, include `Questions to refine the next list`. If there is no usable library evidence and no `Taste analysis` section, place these questions after the lower-confidence evidence note and before the starter recommendations. These are optional follow-up questions for the user to answer while still receiving the current recommendations in the same response, not prerequisites for the current run. Cover only questions that would materially change the next batch, such as:
 
 - Which music type or genre should the next list emphasize or avoid?
 - Which era or time age should it target?
@@ -91,9 +91,9 @@ Immediately after `Taste analysis` and before the recommendation sections, inclu
 - Should it focus on, resemble, or avoid any specific musician?
 - Should the next list be safer, more obscure, newer, older, or more exploratory?
 
-After the recommendation sections, include `Playlist availability`. Check or infer whether the chosen installed desktop app exposes reliable playlist creation and add-to-playlist controls, but treat this as status reporting only. Do not create a playlist or add tracks during the initial recommendation response. Leave the recommendation list visible so the user can decide which tracks, if any, should be added to a playlist or song list.
+After the recommendation sections, include `Playlist availability`. Check or infer whether the chosen installed desktop app exposes reliable playlist creation and add-to-playlist controls, but treat this as status reporting only. Do not create a playlist or add tracks during the initial recommendation response. Leave the recommendation list visible so the user can decide which tracks, if any, should be added to a playlist or song list. End the initial recommendation response with `Playlist action?`: ask whether the user wants Codex to add the recommendations with computer-use, and ask them to choose an existing playlist or a new playlist.
 
-If the user later confirms playlist creation or adding, create or modify the playlist only after the final deduped recommendation list is known and only through an installed desktop app with reliable controls. If the user says to add all recommendations, add the full deduped list; if their intent is unclear, ask whether to add all recommendations or only selected items. The final response should still include the recommendation rationale, plus playlist status: supported but awaiting user selection, created, unavailable, or partially completed with skipped items.
+If the user later confirms playlist creation or adding, create or modify the playlist only after the final deduped recommendation list is known and only through an installed desktop app with reliable controls. If the user says to add all recommendations, add the full deduped list. If their intent is unclear, ask only the missing target or selection question: existing vs new playlist, target playlist name, or all vs selected items. The final response should still include the recommendation rationale, plus playlist status: supported but awaiting user selection, created, unavailable, or partially completed with skipped items.
 
 Mention changes since the last analysis when the cache fingerprint changed.
 

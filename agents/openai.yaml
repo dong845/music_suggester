@@ -1,4 +1,4 @@
 interface:
   display_name: "Music Suggester"
   short_description: "Analyze listening taste from installed music apps and recommend music"
-  default_prompt: "Use $music-suggester to analyze my music taste from whichever installed music app I choose or have available, then directly recommend new songs without repeats and create a playlist if I ask for one and the app supports it."
+  default_prompt: "Use $music-suggester to analyze my music taste from an installed music app, recommend new songs without repeats, then ask whether to add them to an existing or new playlist."
