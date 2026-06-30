@@ -4,7 +4,7 @@ Use the richest safe automatic source available. Prefer computer-use automation 
 
 ## General Desktop App Selection
 
-If the user names a platform, use that installed app first. If not, inspect available downloaded music apps and recent app usage, then choose the richest authorized source. Treat Spotify, Apple Music/Music.app, Amazon Music, YouTube Music desktop apps, TIDAL, Deezer, SoundCloud, and other downloaded music clients as peers. Do not default to Spotify unless it is the best available source.
+If the user names a platform, use that installed app first. If not, inspect available downloaded music apps and recent app usage, then choose the richest authorized source. Treat Spotify, Apple Music/Music.app, Amazon Music, NetEaseMusic, YouTube Music desktop apps, TIDAL, Deezer, SoundCloud, and other downloaded music clients as peers. Do not default to Spotify unless it is the best available source.
 
 For any desktop app, prioritize surfaces with the strongest personal signal:
 
@@ -58,6 +58,22 @@ For confirmed playlist creation or adding after recommendations, use Amazon Musi
 ## YouTube Music
 
 Use a standalone downloaded app only if it can be controlled without Chrome or browser automation. Use liked songs, playlists, uploads, library albums, history, and channel/artist metadata. Normalize official videos, audio tracks, remasters, and live sessions carefully; dedupe by artist-title plus duration when ISRC is absent.
+
+## NetEaseMusic
+
+Use the NetEaseMusic desktop app when installed and authorized. Prioritize 我喜欢的音乐 (liked music), 最近播放 (recently played), 我的播客 (podcasts only when relevant), created playlists under 创建的歌单, saved/collected playlists, daily recommendations, and visible search/history surfaces. Preserve Chinese UI labels and playlist names in notes so later runs can target the same surfaces.
+
+When NetEaseMusic's UI is sparse or long-list scrolling is unreliable, inspect the installed app's local storage read-only before giving up on full liked-song extraction. On macOS, useful music metadata may live under `~/Library/Containers/com.netease.163music/Data/Documents/storage/`. A known pattern is:
+
+1. `sqlite_storage.sqlite3` may have an empty `track` table; do not treat that alone as proof that the liked list is unavailable.
+2. `playlistTrackIds` can store playlist membership as JSON `trackIds`; identify the liked playlist by matching its `track_id_count` to the visible `我喜欢的音乐` count or another app-visible count.
+3. `dbTrack` can store full track metadata keyed by `id`; join `playlistTrackIds.trackIds[*].id` to `dbTrack.id` to reconstruct title, artist, album, duration, and IDs.
+4. `historyTracks` and `playingCount` are useful for recency and repeat weighting, but they are not substitutes for the full liked-song exclusion set when `playlistTrackIds` + `dbTrack` is available.
+5. Record the playlist ID, matched row counts, cache update timestamp, and any missing metadata count. If the local cache timestamp is older than the current run, say that newer likes may require refreshing NetEaseMusic.
+
+Read only music-library metadata. Do not inspect cookies, auth tokens, payment/account data, or unrelated browser/CEF local storage. Do not modify the database or app files.
+
+For confirmed playlist creation or adding after recommendations, read `playlist-computer-use.md` first and use its sparse accessibility / visual UI protocol when the accessibility tree is empty but the screenshot is usable. NetEaseMusic often requires visual coordination: dismiss update modals without updating, use the `+` near 创建的歌单, choose 创建歌单 rather than 歌单导入, verify the new playlist appears, then search and add tracks one at a time. Skip VIP-only, unavailable, cover, live, karaoke, or ambiguous catalog matches unless explicitly requested.
 
 ## TIDAL / Deezer / SoundCloud / Other Desktop Clients
 
