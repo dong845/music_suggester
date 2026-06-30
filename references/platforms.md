@@ -18,6 +18,23 @@ Normalize records with a `source_platform` field and preserve platform-specific 
 
 After recommendations, report whether the chosen installed desktop app appears to support playlist creation and adding tracks. Treat this as status reporting only: do not create a playlist or add tracks during the initial recommendation response. Leave the recommendation list visible for the user to review, then ask whether they want Codex to add recommendations with computer-use and whether to use an existing playlist or create a new playlist. Create or add only after the user explicitly agrees in a follow-up. If their intent is unclear after confirmation, ask only the missing target or selection question: existing vs new playlist, target playlist name, or all vs selected tracks. Prefer computer-use in the selected desktop app. If playlist creation, search, or adding tracks is unavailable or ambiguous, do not force it; report the limitation and provide the recommendation list.
 
+## Local App Cache / Database Fallback
+
+Use this fallback when the installed desktop app is authorized and visible, but UI extraction is incomplete because the accessibility tree is sparse, scrolling is fragile, or only a small sample is visible. Treat local cache inspection as read-only evidence collection, not as an account-authentication shortcut.
+
+General procedure:
+
+1. Confirm the app identity and local storage path belong to the selected installed music app.
+2. Inspect schemas, table names, file names, row counts, and small metadata samples before reading broad data.
+3. Look for collection-membership records separated from metadata records: playlist IDs, liked/favorite/library track IDs, album track IDs, recent-history IDs, play-count IDs, and matching track/artist/album metadata tables.
+4. Reconstruct full collections only when IDs can be joined to metadata with a clear key and the reconstructed count matches an app-visible count or another reliable source.
+5. Keep UI evidence and local-cache evidence distinct. Use local cache data for dedupe and large-scale analysis; use recent-history/play-count tables for recency and weighting; use visible UI to confirm account, labels, and freshness when possible.
+6. Record extraction path, matched counts, unmatched counts, and cache freshness timestamps. If the cache is stale, say which surfaces may be incomplete.
+7. If table names are generic, empty, encrypted, compressed, or ambiguous, keep probing nearby music-related tables conservatively, but stop before reading cookies, tokens, payment/account data, logs unrelated to music, or broad browser/CEF local storage.
+8. Never modify local app databases, cache files, playlists, likes, downloads, or account settings. Do not write helper markers into the app's storage.
+
+Do not overgeneralize a platform-specific schema. NetEaseMusic's `playlistTrackIds` plus `dbTrack` pattern is an example of the membership-plus-metadata shape, not a name pattern to expect in every app.
+
 ## Spotify
 
 Access order:
