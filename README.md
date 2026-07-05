@@ -51,7 +51,7 @@ Find songs that fit my taste and add them to a new playlist if the desktop app s
 Requires Node.js 18+.
 
 ```bash
-npx --yes skills@latest add https://github.com/dong845/music_suggester/tree/main/skills -g --agent codex --copy -y
+npx --yes skills@latest add dong845/music_suggester -g --agent codex --copy -y
 ```
 
 Then run:
