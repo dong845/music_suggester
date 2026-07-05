@@ -46,6 +46,20 @@ $music-suggester
 Find songs that fit my taste and add them to a new playlist if the desktop app supports it.
 ```
 
+## Install With npx skills
+
+Requires Node.js 18+.
+
+```bash
+npx --yes skills@latest add https://github.com/dong845/music_suggester/tree/main/skills -g --agent codex --copy -y
+```
+
+Then run:
+
+```text
+$music-suggester
+```
+
 ## Skill Folder URL
 
 Use this URL when a skill installer asks for a URL that points to a skill folder:
@@ -56,17 +70,11 @@ https://github.com/dong845/music_suggester/tree/main/skills
 
 ## Manual Install
 
-Clone the repo, then copy the skill folder into your Codex skills directory:
+If you prefer not to use `npx skills`, clone the repo and copy the skill folder into your Codex skills directory:
 
 ```bash
 git clone https://github.com/dong845/music_suggester.git
 cp -R music_suggester/skills ~/.codex/skills/music-suggester
-```
-
-Then run:
-
-```text
-$music-suggester
 ```
 
 ## What Is Included
