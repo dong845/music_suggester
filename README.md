@@ -1,6 +1,6 @@
 # Music Suggester
 
-![Music Suggester banner](assets/music-suggester-banner.png)
+![Music Suggester banner](skills/assets/music-suggester-banner.png)
 
 A Codex skill that recommends music from the desktop music apps you already use.
 
@@ -46,12 +46,21 @@ $music-suggester
 Find songs that fit my taste and add them to a new playlist if the desktop app supports it.
 ```
 
-## Install
+## Skill Folder URL
 
-Clone into your Codex skills directory:
+Use this URL when a skill installer asks for a URL that points to a skill folder:
+
+```text
+https://github.com/dong845/music_suggester/tree/main/skills
+```
+
+## Manual Install
+
+Clone the repo, then copy the skill folder into your Codex skills directory:
 
 ```bash
-git clone https://github.com/dong845/music_suggester.git ~/.codex/skills/music-suggester
+git clone https://github.com/dong845/music_suggester.git
+cp -R music_suggester/skills ~/.codex/skills/music-suggester
 ```
 
 Then run:
@@ -62,10 +71,10 @@ $music-suggester
 
 ## What Is Included
 
-- `SKILL.md`: main workflow.
-- `references/platforms.md`: desktop music app guidance.
-- `references/recommendation-method.md`: taste profiling and ranking rules.
-- `references/playlist-computer-use.md`: safer playlist creation/add protocol.
-- `scripts/music_profile_cache.py`: cache, fingerprint, diff, and dedupe helper.
+- `skills/SKILL.md`: main workflow.
+- `skills/references/platforms.md`: desktop music app guidance.
+- `skills/references/recommendation-method.md`: taste profiling and ranking rules.
+- `skills/references/playlist-computer-use.md`: safer playlist creation/add protocol.
+- `skills/scripts/music_profile_cache.py`: cache, fingerprint, diff, and dedupe helper.
 
 Best experience: use an installed music app that is already logged in. If login, MFA, or consent is needed, the skill should pause and ask you to complete it in the app UI.
